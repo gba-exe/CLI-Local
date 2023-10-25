@@ -7,7 +7,7 @@
     <groupId>exe.gba</groupId>
     <artifactId>CLI-Local</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
