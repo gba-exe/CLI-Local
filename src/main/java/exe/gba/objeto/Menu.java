@@ -1,33 +1,76 @@
 package exe.gba.objeto;
 
-import exe.gba.dao.FuncionarioDao;
-import exe.gba.dao.MaquinaDao;
 import exe.gba.dao.OpcoesDao;
 
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class Menu {
-    private final Scanner leitor;
+    private final Scanner leitorNumero;
     private final Scanner leitorString;
-    private final FuncionarioDao funcionarioDao;
     private final OpcoesDao opcoesDao;
     private final Maquina maquina;
 
 
-    public Menu(Scanner leitor, Scanner leitorString, FuncionarioDao funcionarioDao, OpcoesDao opcoesDao, Maquina maquina) {
-        this.leitor = leitor;
+    public Menu(Scanner leitorNumero, Scanner leitorString, OpcoesDao opcoesDao, Maquina maquina) {
+        this.leitorNumero = leitorNumero;
         this.leitorString = leitorString;
-        this.funcionarioDao = funcionarioDao;
         this.opcoesDao = opcoesDao;
         this.maquina = maquina;
     }
 
+    public void fazerLogin (Opcoes opcoes) {
+        System.out.println("Digite o nome de usuário: ");
+        String usuario = leitorString.nextLine();
+
+        System.out.println("Digite a senha: ");
+        String senha = leitorString.nextLine();
+
+        if (usuario.equalsIgnoreCase(opcoes.getUsuario()) && senha.equals(opcoes.getSenha())) {
+            opcoes.setLogado(true);
+            System.out.println("Login realizado... ");
+            return;
+        }
+
+        System.out.println("Usuário e/ou senha inválidos! ");
+    }
+
+    public void fazerCadastro (Opcoes opcoes) {
+        if (!opcoes.getUsuario().isEmpty() || !opcoes.getSenha().isEmpty()){
+            System.out.println("Alerta! O usuário antigo será apagado! ");
+        }
+
+        System.out.println("Digite o nome de usuario: ");
+        String usuarioInserido = leitorString.nextLine();
+
+        System.out.println("Digite a senha: ");
+        String senhaInserida = leitorString.nextLine();
+
+        opcoes.setUsuario(usuarioInserido);
+        opcoes.setSenha(senhaInserida);
+
+        opcoesDao.alterarOpcoes(opcoes);
+    }
+
     public void exibirMenuInicial() {
+        this.limparTerminal();
         System.out.println(
             """
             +--------------------------------------+
-            | StockSafe Solutions                  |
+            | Nenhum usuário logado!               |
+            +--------------------------------------+
+            | 1) Fazer login                       |
+            | 2) Fazer cadastro                    |
+            |                                      |
+            | 0) Sair                              |
+            +--------------------------------------+
+                """);
+    }
+    public void exibirMenuOpcoes(Opcoes opcoes) {
+        this.limparTerminal();
+        System.out.println(
+            """
+            +--------------------------------------+
+            | Olá, %s!                  
             +--------------------------------------+
             | 1) Verificar Dados                   |
             | 2) Listar Processos                  |
@@ -35,7 +78,7 @@ public class Menu {
             |                                      |
             | 0) Sair                              |
             +--------------------------------------+
-                """);
+                """.formatted(opcoes.getUsuario()));
     }
 
     public void verificarDados () {
@@ -43,6 +86,7 @@ public class Menu {
 
         if (opcoes.getMostrarUsoRam() != null) {
             for (int i = 0; i < 20; i++) {
+                this.limparTerminal();
                 System.out.println("+--------------------------------------------------------------------------+");
                 System.out.println("| Dados Atuais");
                 System.out.println("+--------------------------------------------------------------------------+");
@@ -97,7 +141,7 @@ public class Menu {
 
     public Integer solicitarOpcaoInt() {
         System.out.println("Selecione uma opção:");
-        return leitor.nextInt();
+        return leitorNumero.nextInt();
     }
 
     public String solicitarOpcaoString() {
@@ -111,4 +155,8 @@ public class Menu {
     }
 
     public void opcaoInvalida () { System.out.println("Opção inválida"); }
+
+    private void limparTerminal () {
+        System.out.print("\033\143");
+    }
 }

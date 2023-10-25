@@ -9,23 +9,26 @@ public class OpcoesDao {
     private Properties propriedades = new Properties();
 
     public void criarOpcoes() {
-        new File("src/main/resources").mkdirs();
+        if (this.carregarOpcoes() == null) {
+            new File("src/main/resources").mkdirs();
 
-        try(OutputStream output = new FileOutputStream("src/main/resources/config.properties")) {
+            try (OutputStream output = new FileOutputStream("src/main/resources/config.properties")) {
 
-            propriedades.setProperty("display.usoCpu", "1");
-            propriedades.setProperty("display.usoRam", "1");
-            propriedades.setProperty("display.perdaPacotes", "1");
-            propriedades.setProperty("display.taxaTransferencia", "1");
-            propriedades.setProperty("display.armazenamentoTotal", "1");
-            propriedades.setProperty("display.armazenamentoUsado", "1");
+                propriedades.setProperty("display.usoCpu", "1");
+                propriedades.setProperty("display.usoRam", "1");
+                propriedades.setProperty("display.perdaPacotes", "1");
+                propriedades.setProperty("display.taxaTransferencia", "1");
+                propriedades.setProperty("display.armazenamentoTotal", "1");
+                propriedades.setProperty("display.armazenamentoUsado", "1");
 
-            propriedades.setProperty("maquina.codigo", "");
+                propriedades.setProperty("usuario.usuario", "");
+                propriedades.setProperty("usuario.senha", "");
 
 
-            propriedades.store(output, "Primeiras opcões");
-        }   catch (IOException io) {
-            io.printStackTrace();
+                propriedades.store(output, "Primeiras opcões");
+            } catch (IOException io) {
+                io.printStackTrace();
+            }
         }
     }
 
@@ -39,8 +42,8 @@ public class OpcoesDao {
             propriedades.setProperty("display.armazenamentoTotal", opcoes.getMostrarArmazenamentoTotal());
             propriedades.setProperty("display.armazenamentoUsado", opcoes.getMostrarArmazenamentoUsado());
 
-            propriedades.setProperty("maquina.codigo", opcoes.getCodigo());
-
+            propriedades.setProperty("usuario.usuario", opcoes.getUsuario());
+            propriedades.setProperty("usuario.senha", opcoes.getSenha());
 
             propriedades.store(output, "Novas opcões");
         }   catch (IOException io) {
@@ -59,9 +62,10 @@ public class OpcoesDao {
             String mostrarArmazenamentoTotal = propriedades.getProperty("display.armazenamentoTotal");
             String mostrarArmazenamentoUsado = propriedades.getProperty("display.armazenamentoUsado");
 
-            String codigo = propriedades.getProperty("maquina.codigo");
+            String usuario = propriedades.getProperty("usuario.usuario");
+            String senha = propriedades.getProperty("usuario.senha");
 
-            Opcoes opcoes = new Opcoes(mostrarUsoCpu, mostrarUsoRam, mostrarPacotesEnviados, mostrarTaxaTransferencia, mostrarArmazenamentoTotal, mostrarArmazenamentoUsado, codigo);
+            Opcoes opcoes = new Opcoes(mostrarUsoCpu, mostrarUsoRam, mostrarPacotesEnviados, mostrarTaxaTransferencia, mostrarArmazenamentoTotal, mostrarArmazenamentoUsado, usuario, senha);
             return opcoes;
 
         } catch (IOException ex) {
