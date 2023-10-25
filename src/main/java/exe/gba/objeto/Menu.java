@@ -127,6 +127,9 @@ public class Menu {
 
     public void listarProcessos () {
         System.out.println(maquina.getProcessos());
+
+        System.out.println("Aperte enter sair: ");
+        String saída = leitorString.nextLine();
     }
     public void mudarOpcoes () {
         Opcoes opcoes = opcoesDao.carregarOpcoes();
